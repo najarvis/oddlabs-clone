@@ -14,8 +14,10 @@ def run():
     screen = pygame.display.set_mode(screen_size)
 
     map_gen = VoronoiMapGen.mapGen()
+    mid_gen = MidpointDisplacement.MidpointDisplacement()
     # base_vor = map_gen.whole_new_updated(size=(WIDTH, HEIGHT), c1=-1, c2=1, c3=0)
     base_vor = map_gen.radial_drop(map_gen.negative(map_gen.full_updated(size=(WIDTH, HEIGHT))), 1.5, 0.0)
+    base_mid = mid_gen.normalize(mid_gen.NewMidDis(math.log(WIDTH) / math.log(2)))
     pert_vor = map_gen.whole_new_updated(size=(WIDTH, HEIGHT), c1=-1, c2=1, c3=0)
 
     main_map = pygame.PixelArray(pygame.Surface((WIDTH, HEIGHT)))

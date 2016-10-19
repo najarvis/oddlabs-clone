@@ -24,7 +24,25 @@ class MidpointDisplacement(object):
         return to_return
 
     def rand_h(self, r):
-        return (2 * (random.random() - 0.5)) / (2 ** r)
+        return (2 * (random.random() - 0.5)) / (2 ** (r + 1))
+
+    def normalize(self, array):
+        r_array = array
+        
+        min_val = r_array[0][0]
+        max_val = r_array[0][0]
+
+        for y in xrange(len(r_array)):
+            for x in xrange(len(r_array[0])):
+                min_val = min(r_array[x][y], min_val)
+                max_val = max(r_array[x][y], max_val)
+
+        for y in xrange(len(r_array)):
+            for x in xrange(len(r_array[0])):
+                r_array[x][y] -= min_val
+                r_array[x][y] /= (max_val - min_val)
+
+        return r_array
 
     def diamond(self, array, recursion_depth, iteration_x, iteration_y, N):
         size = ((2 ** N) / (2 ** recursion_depth))
@@ -33,7 +51,7 @@ class MidpointDisplacement(object):
         br = array[size * iteration_x + size][size * iteration_y + size]
         bl = array[size * iteration_x][size * iteration_y + size]
 
-        array[size * iteration_x + size / 2][size * iteration_y + size / 2] = ((tl + tr + br + bl)) / 4 + self.rand_h(recursion_depth + 1)
+        array[size * iteration_x + size / 2][size * iteration_y + size / 2] = ((tl + tr + br + bl) / 4) + self.rand_h(recursion_depth - 1)
 
         # Square step
 
@@ -46,7 +64,7 @@ class MidpointDisplacement(object):
         array[size * iteration_x + size][size * iteration_y + size / 2] = (tr + br + mid) / 3 + self.rand_h(recursion_depth)
 
         # bottom mid
-        array[size * iteration_x / 2][size * iteration_y + size] = (bl + br + mid) / 3 + self.rand_h(recursion_depth)
+        array[size * iteration_x + size / 2][size * iteration_y + size] = (bl + br + mid) / 3 + self.rand_h(recursion_depth)
 
         # left mid
         array[size * iteration_x][size * iteration_y + size / 2] = (tl + bl + mid) / 3 + self.rand_h(recursion_depth)
